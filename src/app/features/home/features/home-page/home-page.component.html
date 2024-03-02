@@ -1,0 +1,158 @@
+<h1>Cartas Promesa de Pago</h1>
+<div class="  mb-4">
+  <p-button (click)="showDialog()" icon="pi pi-plus" label="Create" [text]="true" [raised]="true"></p-button>
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<h2>Buscar Registros</h2>
+<br/>
+<div style="display: inline-block;">
+  <span class="p-float-label" >
+    <p-calendar inputId="birth_date"  [(ngModel)]="searchSolicitud" ></p-calendar>
+    <label for="birth_date">Fecha Solicitud</label>
+</span>
+<br/>
+<br/>
+<span class="p-float-label">
+  <p-calendar inputId="birth_date"  [(ngModel)]="searchVencimiento" ></p-calendar>
+  <label for="birth_date">Fecha Vencimiento</label>
+</span>
+</div>
+
+<br/>
+<br/>
+
+<p-button label="Buscar"  severity="info" (onClick)="search()" ></p-button>
+<br/>
+<br/>
+<br/>
+<br/>
+@if (solicitudModel$ | async; as items){
+    <div class="card">
+      <p-table
+          [value]="items"
+          [paginator]="true"
+          [rows]="5"
+          [showCurrentPageReport]="true"
+          [tableStyle]="{ 'min-width': '50rem' }"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+
+          [rowsPerPageOptions]="[5, 10, 20]"
+          responsiveLayout="stack"
+      >
+          <ng-template pTemplate="header">
+              <tr>
+                <th style="width:25%">Ordenante</th>
+                  <th style="width:25%">Beneficiario</th>
+                  <th style="width:25%">Fecha Solicitud</th>
+                  <th style="width:25%">Fecha Vencimiento</th>
+                  <th style="width:25%">Monto</th>
+                  <th style="width:25%">Estado</th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+
+              <tr>
+                <td>{{item.nombreOrdenante}} {{item.apellidoOrdenante}}</td>
+                <td>{{item.nombreBeneficiario}} {{item.apellidoBeneficiario}}</td>
+                <td>{{item.fechaSolicitud | date : "YYYY-MM-dd hh:mm OOOO"}}</td>
+                <td>{{item.fechaVencimiento | date}}</td>
+                <td>{{item.monto | currency}}</td>
+                <td>
+                  @if(item.estado){
+                    <label>ATENDIDA</label>
+                  }
+                  @else {
+                    <label>PROGRAMADA</label>
+                  }
+                </td>
+            </tr>
+          </ng-template>
+      </p-table>
+    </div>
+  }
+  @else {
+    <label>No tiene citas</label>
+  }
+
+
+  <p-dialog header="Crear Solicitud de Carta Promesa" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+    <br/>
+    <span class="p-float-label">
+      <input pInputText id="text-name" [(ngModel)]="model.nombreOrdenante"
+      autocomplete="off"
+      style="width: 100%;"/>
+      <label for="text-name">Nombre Ordenante</label>
+  </span>
+  <br/>
+  <br/>
+  <span class="p-float-label">
+    <input pInputText id="text-name" [(ngModel)]="model.apellidoOrdenante"
+    autocomplete="off"
+    style="width: 100%;"/>
+    <label for="text-name">Apellido Ordenante</label>
+</span>
+<br/>
+<br/>
+      <span class="p-float-label">
+        <input pInputText id="text-name" [(ngModel)]="model.nombreBeneficiario"
+        autocomplete="off"
+        style="width: 100%;"/>
+        <label for="text-name">Nombre Beneficiario</label>
+    </span>
+    <br/>
+    <br/>
+    <span class="p-float-label">
+      <input pInputText id="text-name" [(ngModel)]="model.apellidoBeneficiario"
+      autocomplete="off"
+      style="width: 100%;"/>
+      <label for="text-name">Apellido Beneficiario</label>
+  </span>
+  <br/>
+  <br/>
+    <span class="p-float-label">
+      <p-calendar inputId="birth_date"[style]="{'width':'100%'}"  [(ngModel)]="fetchSolicitud" ></p-calendar>
+      <label for="birth_date">Fecha Solicitud</label>
+  </span>
+  <br/>
+  <br/>
+  <div class="card flex justify-content-center">
+    <span class="p-float-label">
+        <p-dropdown [options]="horas" [style]="{'width':'100%'}" [(ngModel)]="selectedHoras"  placeholder="Hora" optionLabel="hora" inputId="float-label"></p-dropdown>
+        <label for="float-label">Hora</label>
+    </span>
+</div>
+<br/>
+<br/>
+<div class="card flex justify-content-center">
+  <span class="p-float-label">
+      <p-dropdown [options]="minutos" [style]="{'width':'100%'}" [(ngModel)]="selectedMinutos"  placeholder="Minutos" optionLabel="minuto" inputId="float-label"></p-dropdown>
+      <label for="float-label">Minutos</label>
+  </span>
+</div>
+<br/>
+<br/>
+<span class="p-float-label">
+  <p-calendar inputId="birth_date2" [style]="{'width':'100%'}"  [(ngModel)]="fetchVencimiento" ></p-calendar>
+  <label for="birth_date2">Fecha Vencimiento</label>
+</span>
+<br/>
+<br/>
+  <span class="p-float-label">
+    <input type="number" pInputText id="text-name" [(ngModel)]="model.monto"
+    autocomplete="off"
+    style="width: 100%;"/>
+    <label for="text-description">Monto</label>
+</span>
+    <br/>
+    <p-button label="Registrar" [style]="{'width':'100%'}" [loading]="isLoading" severity="info" (onClick)="submit()" ></p-button>
+    <br/>
+
+
+
+</p-dialog>
+
+<p-toast></p-toast>
